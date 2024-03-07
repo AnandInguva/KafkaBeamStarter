@@ -1,0 +1,9 @@
+{
+  "type": "record",
+  "namespace": "org.example.avro",
+  "name": "FullName",
+  "fields": [
+    { "name": "first", "type": "string" },
+    { "name": "last", "type": "string" }
+  ]
+}
