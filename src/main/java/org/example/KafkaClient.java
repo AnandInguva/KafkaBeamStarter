@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class KafkaClient {
-    private static final Duration sleep = Duration.ofSeconds(10);
+    private static final Duration sleep = Duration.ofMinutes(1);
     public static class Producer {
 
         public static KafkaProducer of() {
@@ -28,6 +28,7 @@ public class KafkaClient {
             map.putAll(ClientProperties.get());
             map.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
             map.put("value.subject.name.strategy", RecordNameStrategy.class.getName());
+            map.put("auto.register.schemas", true);
             map.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
             map.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
             KafkaProducer producer = new KafkaProducer(map);
@@ -51,7 +52,7 @@ public class KafkaClient {
     static Logger logger = Logger.getLogger("logger");
 
     public static FullName produceRecord() {
-        return new FullName("Anand", "Inguva");
+        return new FullName("Anand", "Inguva", 1);
     }
     public static void main(String[] args) throws  Exception {
 
@@ -69,9 +70,9 @@ public class KafkaClient {
                 producer.send(new ProducerRecord(GMKConstants.topic, "message1", name)).get();
                 logger.log(Level.INFO,"Published message %s", msgCount);
                 msgCount++;
+                Thread.sleep(1 * 1000 * 60);
                 ConsumerRecords<String, String> record = consumer.poll(Duration.ofMinutes(1));
                 logger.log(Level.INFO, "Received message: %s", record);
-                Thread.sleep(sleep.toMillis());
             } catch (Throwable e) {
                 continue;
             }

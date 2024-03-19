@@ -4,6 +4,7 @@
   "name": "FullName",
   "fields": [
     { "name": "first", "type": "string" },
-    { "name": "last", "type": "string" }
+    { "name": "last", "type": "string" },
+    {"name": "id", "type":  "int"}
   ]
 }

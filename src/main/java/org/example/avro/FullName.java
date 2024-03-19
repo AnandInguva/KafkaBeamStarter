@@ -14,10 +14,10 @@ import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class FullName extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -3602418822779171797L;
+  private static final long serialVersionUID = -890726554360259523L;
 
 
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"FullName\",\"namespace\":\"org.example.avro\",\"fields\":[{\"name\":\"first\",\"type\":\"string\"},{\"name\":\"last\",\"type\":\"string\"}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"FullName\",\"namespace\":\"org.example.avro\",\"fields\":[{\"name\":\"first\",\"type\":\"string\"},{\"name\":\"last\",\"type\":\"string\"},{\"name\":\"id\",\"type\":\"int\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static final SpecificData MODEL$ = new SpecificData();
@@ -75,6 +75,7 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
 
   private java.lang.CharSequence first;
   private java.lang.CharSequence last;
+  private int id;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -87,10 +88,12 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
    * All-args constructor.
    * @param first The new value for first
    * @param last The new value for last
+   * @param id The new value for id
    */
-  public FullName(java.lang.CharSequence first, java.lang.CharSequence last) {
+  public FullName(java.lang.CharSequence first, java.lang.CharSequence last, java.lang.Integer id) {
     this.first = first;
     this.last = last;
+    this.id = id;
   }
 
   @Override
@@ -105,6 +108,7 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
     switch (field$) {
     case 0: return first;
     case 1: return last;
+    case 2: return id;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -116,6 +120,7 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
     switch (field$) {
     case 0: first = (java.lang.CharSequence)value$; break;
     case 1: last = (java.lang.CharSequence)value$; break;
+    case 2: id = (java.lang.Integer)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -152,6 +157,23 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
    */
   public void setLast(java.lang.CharSequence value) {
     this.last = value;
+  }
+
+  /**
+   * Gets the value of the 'id' field.
+   * @return The value of the 'id' field.
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   * Sets the value of the 'id' field.
+   * @param value the value to set.
+   */
+  public void setId(int value) {
+    this.id = value;
   }
 
   /**
@@ -197,6 +219,7 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
 
     private java.lang.CharSequence first;
     private java.lang.CharSequence last;
+    private int id;
 
     /** Creates a new Builder */
     private Builder() {
@@ -217,6 +240,10 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
         this.last = data().deepCopy(fields()[1].schema(), other.last);
         fieldSetFlags()[1] = other.fieldSetFlags()[1];
       }
+      if (isValidValue(fields()[2], other.id)) {
+        this.id = data().deepCopy(fields()[2].schema(), other.id);
+        fieldSetFlags()[2] = other.fieldSetFlags()[2];
+      }
     }
 
     /**
@@ -232,6 +259,10 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
       if (isValidValue(fields()[1], other.last)) {
         this.last = data().deepCopy(fields()[1].schema(), other.last);
         fieldSetFlags()[1] = true;
+      }
+      if (isValidValue(fields()[2], other.id)) {
+        this.id = data().deepCopy(fields()[2].schema(), other.id);
+        fieldSetFlags()[2] = true;
       }
     }
 
@@ -315,6 +346,45 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
       return this;
     }
 
+    /**
+      * Gets the value of the 'id' field.
+      * @return The value.
+      */
+    public int getId() {
+      return id;
+    }
+
+
+    /**
+      * Sets the value of the 'id' field.
+      * @param value The value of 'id'.
+      * @return This builder.
+      */
+    public org.example.avro.FullName.Builder setId(int value) {
+      validate(fields()[2], value);
+      this.id = value;
+      fieldSetFlags()[2] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'id' field has been set.
+      * @return True if the 'id' field has been set, false otherwise.
+      */
+    public boolean hasId() {
+      return fieldSetFlags()[2];
+    }
+
+
+    /**
+      * Clears the value of the 'id' field.
+      * @return This builder.
+      */
+    public org.example.avro.FullName.Builder clearId() {
+      fieldSetFlags()[2] = false;
+      return this;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public FullName build() {
@@ -322,6 +392,7 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
         FullName record = new FullName();
         record.first = fieldSetFlags()[0] ? this.first : (java.lang.CharSequence) defaultValue(fields()[0]);
         record.last = fieldSetFlags()[1] ? this.last : (java.lang.CharSequence) defaultValue(fields()[1]);
+        record.id = fieldSetFlags()[2] ? this.id : (java.lang.Integer) defaultValue(fields()[2]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -358,6 +429,8 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
 
     out.writeString(this.last);
 
+    out.writeInt(this.id);
+
   }
 
   @Override public void customDecode(org.apache.avro.io.ResolvingDecoder in)
@@ -369,8 +442,10 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
 
       this.last = in.readString(this.last instanceof Utf8 ? (Utf8)this.last : null);
 
+      this.id = in.readInt();
+
     } else {
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 3; i++) {
         switch (fieldOrder[i].pos()) {
         case 0:
           this.first = in.readString(this.first instanceof Utf8 ? (Utf8)this.first : null);
@@ -378,6 +453,10 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
 
         case 1:
           this.last = in.readString(this.last instanceof Utf8 ? (Utf8)this.last : null);
+          break;
+
+        case 2:
+          this.id = in.readInt();
           break;
 
         default:
