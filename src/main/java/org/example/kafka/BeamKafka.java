@@ -1,4 +1,4 @@
-package org.example;
+package org.example.kafka;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineRunner;

@@ -1,10 +1,9 @@
-package org.example;
+package org.example.kafka;
 
 
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.beam.sdk.coders.AtomicCoder;
-import org.apache.beam.sdk.coders.CoderException;
 import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.extensions.avro.coders.AvroCoder;
 import org.apache.beam.vendor.grpc.v1p60p1.com.google.common.cache.Cache;
@@ -50,7 +49,7 @@ public class GenericRecordCoder extends AtomicCoder<GenericRecord> {
        try {
            return avroCoderCache.get(schemaString, () -> AvroCoder.of(new Schema.Parser().parse(schemaString)));
        } catch (ExecutionException e) {
-           throw new AssertionError("Impoosbile");
+           throw new AssertionError("Impossible");
        }
     }
 }

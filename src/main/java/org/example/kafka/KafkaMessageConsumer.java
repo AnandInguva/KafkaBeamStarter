@@ -1,4 +1,4 @@
-package org.example;
+package org.example.kafka;
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
@@ -35,7 +35,7 @@ public class KafkaMessageConsumer {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "my-consumer-group"); // Identify your consumer group
         //Set value for new property
         props.setProperty("value.subject.name.strategy", RecordNameStrategy.class.getName());
-        String topic = "quickstart-event";
+        String topic = "test-topic-1";
         KafkaConsumer<String, SpecificRecord> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Collections.singletonList(topic));
 

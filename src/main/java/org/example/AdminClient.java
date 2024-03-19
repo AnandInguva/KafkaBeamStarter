@@ -6,7 +6,6 @@ import org.apache.kafka.common.errors.TopicExistsException;
 
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 final class AdminClient implements AutoCloseable {
 

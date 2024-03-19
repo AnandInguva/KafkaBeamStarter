@@ -1,8 +1,0 @@
-/Users/anandinguva/Desktop/projects/KafkaProject/src/main/java/org/example/BeamKafka.java
-/Users/anandinguva/Desktop/projects/KafkaProject/src/main/java/org/example/GMKConstants.java
-/Users/anandinguva/Desktop/projects/KafkaProject/src/main/java/org/example/GenericRecordCoder.java
-/Users/anandinguva/Desktop/projects/KafkaProject/src/main/java/org/example/KafkaMessageConsumer.java
-/Users/anandinguva/Desktop/projects/KafkaProject/src/main/java/org/example/KafkaMessageProducer.java
-/Users/anandinguva/Desktop/projects/KafkaProject/src/main/java/org/example/avro/FullName.java
-/Users/anandinguva/Desktop/projects/KafkaProject/src/main/java/org/example/avro/SimpleMessage.java
-/Users/anandinguva/Desktop/projects/KafkaProject/src/main/java/org/example/kafka/KafkaToBQ.java
