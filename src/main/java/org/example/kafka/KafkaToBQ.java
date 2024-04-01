@@ -1,13 +1,13 @@
 package org.example.kafka;
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
-import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.coders.ByteArrayCoder;
-import org.apache.beam.sdk.coders.KvCoder;
 import org.apache.beam.sdk.coders.NullableCoder;
+import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.io.kafka.KafkaIO;
+import org.apache.beam.sdk.io.kafka.KafkaRecord;
 import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.DoFn;
@@ -16,9 +16,11 @@ import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PBegin;
 import org.apache.beam.sdk.values.PCollection;
-import org.apache.beam.sdk.values.PCollectionTuple;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
-import org.apache.beam.sdk.io.gcp.bigquery.WriteResult;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.example.ClientProperties;
+import org.example.GMKConstants;
 //import com.google.cloud.teleport.v2.transforms.BigQueryConverters;
 
 
@@ -26,25 +28,26 @@ import org.apache.beam.sdk.io.gcp.bigquery.WriteResult;
 import java.util.*;
 
 public class KafkaToBQ {
-    private static class PrintRecord extends DoFn<KV<byte[], GenericRecord>, Void> {
-        @ProcessElement
-        public void processElement(@Element KV<byte[], GenericRecord> record) {
-            System.out.println(record);
-        }
-    }
     public static class DeserializeBytes extends DoFn<KV<byte[], byte[]>, KV<byte[], GenericRecord>> {
         @ProcessElement
         public void processElement(@Element KV<byte[], byte[]> data, OutputReceiver<KV<byte[], GenericRecord>> output) {
             KafkaAvroDeserializer deserializer  = new KafkaAvroDeserializer();
             Map<String, String> kafkaProps = new HashMap<>();
-            kafkaProps.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
-            kafkaProps.put("specific.avro.reader", "true");
             deserializer.configure(kafkaProps, true);
             byte[] byteValue = data.getValue();
             final GenericRecord o = (GenericRecord) deserializer.deserialize("quickstart-event", byteValue);
             final byte[] key = data.getKey();
             output.output(KV.of(key, o));
         }
+    }
+
+    public static class PrintElements extends DoFn<KafkaRecord<String, String>, Void> {
+
+        @ProcessElement
+        public void processElement(@Element KafkaRecord<String, String> record) {
+            System.out.println(record.getKV());
+        }
+
     }
 
     public static PTransform<PBegin, PCollection<KV<byte[], byte[]>>> readAvroFromKafka(
@@ -61,29 +64,28 @@ public class KafkaToBQ {
         return kafkaRecords.withoutMetadata();
     }
     public static void main(String[] args) {
-        PipelineOptions options = PipelineOptionsFactory.create();
+        PipelineOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().create();
         Pipeline pipeline = Pipeline.create(options);
-        String topic = "quickstart-event";
-        String subject = "fullName";
-        String bootstrapServer = "http://localhost:9092";
-
-        PCollection<KV<byte[], GenericRecord>> genericRecords = pipeline.apply(
-                readAvroFromKafka(bootstrapServer, Collections.singletonList(topic), null)
-        ).apply(ParDo.of(new DeserializeBytes())).setCoder(KvCoder.of(ByteArrayCoder.of(), GenericRecordCoder.of()));
-
-//
-        genericRecords.apply(ParDo.of(new PrintRecord()));
+        String topic = GMKConstants.topic;
+        String bootstrapServer = GMKConstants.bootStrapServers;
+        List<TopicPartition> partitions = new ArrayList<>();
+        for (int i = 0; i < GMKConstants.partitions; i++) {
+            partitions.add(new TopicPartition(topic, i));
+        }
 
 
-        /*
-        * Step #2: Transform the Kafka messages into TableRows.
-         */
-        PCollectionTuple convertedTableRows;
-        WriteResult writeResult;
+       PCollection<KafkaRecord<String, String>> kafkaRead = pipeline.apply(
+               KafkaIO.<String, String>read()
+                       .withBootstrapServers(bootstrapServer)
+                       .withTopicPartitions(partitions)
+                       .withKeyDeserializerAndCoder(
+                       StringDeserializer.class, NullableCoder.of(StringUtf8Coder.of()))
+                        .withValueDeserializerAndCoder(
+                       StringDeserializer.class, NullableCoder.of(StringUtf8Coder.of()))
+                       .withConsumerConfigUpdates(ClientProperties.get())
+       );
+       kafkaRead.apply(ParDo.of(new PrintElements()));
 
-//     s.create()).apply(Convert.toRows()).apply(BigQueryConverters.<Row>createWriteTransform(options).useBeamSchema());
-
-
-        pipeline.run().waitUntilFinish();
+       pipeline.run().waitUntilFinish();
     }
 }

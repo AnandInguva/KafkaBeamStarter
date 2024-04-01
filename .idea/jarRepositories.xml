@@ -2,9 +2,24 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="DataflowTemplates" />
+      <option name="name" value="DataflowTemplates" />
+      <option name="url" value="file:$MAVEN_REPOSITORY$/com/google/cloud/teleport/templates-maven-plugin/1.0-SNAPSHOT" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="DataflowTemplates" />
+      <option name="name" value="DataflowTemplates" />
+      <option name="url" value="file:$PROJECT_DIR$/../../DataflowTemplates" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="DataflowTemplates" />
+      <option name="name" value="DataflowTemplates" />
+      <option name="url" value="$PROJECT_DIR$/../../DataflowTemplates" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />

@@ -17,6 +17,7 @@
     <build>
         <pluginManagement>
             <plugins>
+
                 <plugin>
                     <groupId>io.confluent</groupId>
                     <artifactId>kafka-schema-registry-maven-plugin</artifactId>
@@ -141,6 +142,11 @@
             <version>2.10.10</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.auth</groupId>
+            <artifactId>google-auth-library-oauth2-http</artifactId>
+            <version>1.19.0</version>
+        </dependency>
     </dependencies>
 
     <properties>
