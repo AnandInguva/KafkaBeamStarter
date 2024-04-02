@@ -10,8 +10,8 @@ import java.util.concurrent.ExecutionException;
 final class AdminClient implements AutoCloseable {
 
     private final Admin admin;
-    private static final int numPartitions = 1;
-    private static final Integer replicationFactor = 1;
+    private static final int numPartitions = GMKConstants.partitions;
+    private static final Integer replicationFactor = GMKConstants.replicationFactor;
 
     public AdminClient() {
         admin = Admin.create(ClientProperties.get());
@@ -28,7 +28,7 @@ final class AdminClient implements AutoCloseable {
 
     public void enusreTopicExists(String topicName) throws Exception {
         try {
-            admin.createTopics(Collections.singleton(defaultTopic(GMKConstants.topic))).all().get();
+            admin.createTopics(Collections.singleton(defaultTopic(topicName))).all().get();
         } catch (ExecutionException e) {
             if (e.getCause() instanceof TopicExistsException){
 //                throw e;
