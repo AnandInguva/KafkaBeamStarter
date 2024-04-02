@@ -77,10 +77,11 @@ public class KafkaClient {
 
     static Logger logger = Logger.getLogger("logger");
 
-    private static final GenericRecord produceRecord(Schema schema) {
+    private static final GenericRecord produceRecord(Schema schema, int id) {
         return new GenericRecordBuilder(schema)
                 .set("first", "Anand")
                 .set("last", "Inguva")
+                .set("id", id)
                 .build();
     }
 
@@ -110,10 +111,9 @@ public class KafkaClient {
 
         int msgCount = 0;
         while (true) {
-            GenericRecord name = produceRecord(avroSchema);
-            producer.send(new ProducerRecord(GMKConstants.topic, name)).get();
-            logger.log(Level.INFO,String.format("Published message %s with id: %s", name, msgCount));
-            LOG.info(String.format("Published message %s with id: %s", name, msgCount));
+            GenericRecord record = produceRecord(avroSchema, msgCount);
+            producer.send(new ProducerRecord(GMKConstants.topic, record)).get();
+            LOG.info(String.format("Published message %s with id: %s", record, msgCount));
             msgCount++;
             Thread.sleep(1 * 1000 * 10);
         }
