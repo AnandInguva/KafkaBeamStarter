@@ -49,8 +49,14 @@ public class KafkaClient {
 
             LOG.info("Created mock schema registry client");
 
+            Map<String, Object> configs = new HashMap<String, Object>();
+            configs.put(
+                    "bootstrap.servers", GMKConstants.bootStrapServers);
+
+            configs.putAll(ClientProperties.get());
+
             return new KafkaProducer<>(
-                    ImmutableMap.of("bootstrap.servers", GMKConstants.bootStrapServers),
+                    configs,
                     keySerializer,
                     valueSerializer);
         }
@@ -83,9 +89,9 @@ public class KafkaClient {
     }
     public static void main(String[] args) throws  Exception {
 
-//        try (AdminClient adminClient = new AdminClient()) {
-//            adminClient.enusreTopicExists(GMKConstants.topic);
-//        }
+        try (AdminClient adminClient = new AdminClient()) {
+            adminClient.enusreTopicExists(GMKConstants.topic);
+        }
 
         String avroSchemaPath = "{\n" +
                 "  \"type\": \"record\",\n" +
@@ -104,16 +110,12 @@ public class KafkaClient {
 
         int msgCount = 0;
         while (true) {
-            try {
-                GenericRecord name = produceRecord(avroSchema);
-                producer.send(new ProducerRecord(GMKConstants.topic, name)).get();
-                logger.log(Level.INFO,String.format("Published message %s with id: %s", name, msgCount));
-                LOG.info(String.format("Published message %s with id: %s", name, msgCount));
-                msgCount++;
-                Thread.sleep(1 * 1000 * 10);
-            } catch (Throwable e) {
-                continue;
-            }
+            GenericRecord name = produceRecord(avroSchema);
+            producer.send(new ProducerRecord(GMKConstants.topic, name)).get();
+            logger.log(Level.INFO,String.format("Published message %s with id: %s", name, msgCount));
+            LOG.info(String.format("Published message %s with id: %s", name, msgCount));
+            msgCount++;
+            Thread.sleep(1 * 1000 * 10);
         }
     }
 }

@@ -1,0 +1,71 @@
+# Creates an external client that runs in the consumer project.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gmk-kafka-client
+  labels:
+    "type" : "ns"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anandinguva-kafka-producer
+  namespace: gmk-kafka-client
+  labels:
+    app: kafka-client
+spec:
+  selector:
+    matchLabels:
+      app: kafka-client
+  # Increase the number of replicas if you're load testing.
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kafka-client
+    spec:
+      containers:
+        - name: client
+          image: "us-docker.pkg.dev/dataflow-testing-311516/df-test-us/anandinguva_kafka_avro_producer:latest"
+          imagePullPolicy: Always
+          env:
+            - name: GMK_PASSWORD
+              valueFrom:
+                # TODO: obtain a base64-encoded service account key to use for the `gmk-sasl-plain-login`
+                # secret. You will need this value in the deployment step. go/gmk-client-auth-guide#acquire-a-service-account-key
+                secretKeyRef:
+                  name: gmk-sasl-plain-login
+                  key: password
+          command: ["java"]
+          args: [
+            "-jar", "/app/app.jar",
+
+#            # TODO: Set the broker's bootstrap address.
+#            # Format if the client is running in the consumer project (depends on GMK environment):
+#            # sandbox:  bootstrap.GMK_CLUSTER_ID.REGION.managedkafka-sandbox.CONSUMER_PROJECT_ID.cloud-test.goog:9092
+#            # autopush: bootstrap.GMK_CLUSTER_ID.REGION.managedkafka-autopush.CONSUMER_PROJECT_ID.cloud-test.goog:9092
+#            # staging:  bootstrap.GMK_CLUSTER_ID.REGION.managedkafka-staging.CONSUMER_PROJECT_ID.cloud-staging.goog:9092
+#            # prod:     bootstrap.GMK_CLUSTER_ID.REGION.managedkafka.CONSUMER_PROJECT_ID.cloud.goog:9092
+#            "--bootstrap_address", "bootstrap.anandinguva-test-cluster.us-central1.managedkafka-staging.dataflow-testing-311516.cloud-staging.goog:9092",
+#            # If the Kafka cluster is secured with TLS/SSL, this should be enabled for the client.
+#            "--enable_ssl",
+#
+#            # The service account whose key is used in the SASL/PLAIN password.
+#            # TODO: update this if you're using a custom service account key for the
+#            # gmk-sasl-plain-login password.
+#            "--gmk_username", "anandinguva-gmk-test@gmk-creds-testing.iam.gserviceaccount.com",
+#
+#            # Publishing parameters.
+#            "--topic", "test-topic",
+#            "--partitions", "3",
+#            "--sleep", "5s"]
+              ]
+          # Adjust resources if you're load testing.
+          resources:
+            limits:
+              cpu: 32
+              memory: 32Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+
