@@ -17,7 +17,7 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
   private static final long serialVersionUID = -890726554360259523L;
 
 
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"FullName\",\"namespace\":\"org.example.avro\",\"fields\":[{\"name\":\"first\",\"type\":\"string\"},{\"name\":\"last\",\"type\":\"string\"},{\"name\":\"id\",\"type\":\"int\",\"default\":0}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"FullName\",\"namespace\":\"org.example.avro\",\"fields\":[{\"name\":\"first\",\"type\":\"string\"},{\"name\":\"last\",\"type\":\"string\"},{\"name\":\"id\",\"type\":\"int\",\",default\":0}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static final SpecificData MODEL$ = new SpecificData();

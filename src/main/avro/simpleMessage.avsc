@@ -3,7 +3,7 @@
   "name": "SimpleMessage",
   "namespace": "org.example.avro",
   "fields": [
-    {"name": "content", "type":"string", "doc": "Message content"},
-    {"name": "date_time", "type":"string", "doc": "Datetime when the message was generated"}
+    {"name": "message", "type":"string", "doc": "Message content"},
+    {"name": "id", "type":"int"}
   ]
 }

@@ -21,7 +21,6 @@ import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.example.ClientProperties;
 import org.example.GMKConstants;
-//import com.google.cloud.teleport.v2.transforms.BigQueryConverters;
 
 
 

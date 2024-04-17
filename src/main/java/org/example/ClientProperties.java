@@ -9,7 +9,6 @@ import java.util.HashMap;
 public class ClientProperties {
     // Add SASL PLAIN TEXT details
     // Append the suffix to the GMK_USERNAME if we are using auth tokens.
-    private static final String AUTH_TOKEN_USERNAME_PREFIX = "__AUTH_TOKEN__";
     private static final String GMK_USERNAME = "anandinguva-gmk-test@gmk-creds-testing.iam.gserviceaccount.com";
     public static ImmutableMap<String, Object> get(){
 
