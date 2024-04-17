@@ -142,16 +142,17 @@ public class KafkaClient {
         try (AdminClient adminClient = new AdminClient()) {
             adminClient.enusreTopicExists(GMKConstants.topic);
         }
+// ****************************************************************************************************** //
+
 
         // Add support for multiple schemas.
-        Schema fullNameAvroSchema = new Schema.Parser().parse(new File(fullNameAvroSchemaPath));
-        Schema simpleMessageAvroSchema = new Schema.Parser().parse(new File(simpleMessageAvroSchemaPath));
+//        Schema fullNameAvroSchema = new Schema.Parser().parse(new File(fullNameAvroSchemaPath));
+//        Schema simpleMessageAvroSchema = new Schema.Parser().parse(new File(simpleMessageAvroSchemaPath));
 
-        List<Schema> schemaList = new ArrayList<>();
-        schemaList.add(fullNameAvroSchema);
-        schemaList.add(simpleMessageAvroSchema);
+//        List<Schema> schemaList = new ArrayList<>();
+//        schemaList.add(fullNameAvroSchema);
+//        schemaList.add(simpleMessageAvroSchema);
 
-        // ****************************************************************************************************** //
         // Publish Avro messages.
 //        KafkaProducer producer = Producer.of(schemaList);
 //        KafkaConsumer consumer = Consumer.of();
