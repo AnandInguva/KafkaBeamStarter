@@ -36,8 +36,12 @@ import java.util.logging.Logger;
 
 public class KafkaClient {
     private static final Duration sleep = Duration.ofMinutes(1);
-    private static final String fullNameAvroSchemaPath = "/Users/anandinguva/Desktop/projects/KafkaProject/src/main/avro/fullName.avsc";
-    private static final String simpleMessageAvroSchemaPath = "/Users/anandinguva/Desktop/projects/KafkaProject/src/main/avro/simpleMessage.avsc";
+//    private static final String fullNameAvroSchemaPath = "/Users/anandinguva/Desktop/projects/KafkaProject/src/main/avro/fullName.avsc";
+//    private static final String simpleMessageAvroSchemaPath = "/Users/anandinguva/Desktop/projects/KafkaProject/src/main/avro/simpleMessage.avsc";
+
+    // Comment these while running on local.
+    private static final String fullNameAvroSchemaPath = "/app/fullName.avsc";
+    private static final String simpleMessageAvroSchemaPath = "/app/simpleMessage.avsc";
     // Decouple Producer from this class to a different class for better readability.
     public static class Producer {
 
@@ -146,55 +150,50 @@ public class KafkaClient {
 
 
         // Add support for multiple schemas.
-//        Schema fullNameAvroSchema = new Schema.Parser().parse(new File(fullNameAvroSchemaPath));
-//        Schema simpleMessageAvroSchema = new Schema.Parser().parse(new File(simpleMessageAvroSchemaPath));
+        Schema fullNameAvroSchema = new Schema.Parser().parse(new File(fullNameAvroSchemaPath));
+        Schema simpleMessageAvroSchema = new Schema.Parser().parse(new File(simpleMessageAvroSchemaPath));
 
-//        List<Schema> schemaList = new ArrayList<>();
-//        schemaList.add(fullNameAvroSchema);
-//        schemaList.add(simpleMessageAvroSchema);
+        List<Schema> schemaList = new ArrayList<>();
+        schemaList.add(fullNameAvroSchema);
+        schemaList.add(simpleMessageAvroSchema);
 
-        // Publish Avro messages.
-//        KafkaProducer producer = Producer.of(schemaList);
-//        KafkaConsumer consumer = Consumer.of();
+//         Publish Avro messages.
+        KafkaProducer producer = Producer.of(schemaList);
+        KafkaConsumer consumer = Consumer.of();
 
 
-//        int msgCount = 0;
-//        while (true) {
-//            GenericRecord fullNameRecord = produceFullName(fullNameAvroSchema, msgCount);
-//            GenericRecord simpleMessageRecord = produceSimpleMessage(simpleMessageAvroSchema, msgCount);
-//
-//            producer.send(new ProducerRecord(GMKConstants.topic, fullNameRecord)).get();
-//            logger.log(Level.INFO, String.format("Published message %s with id: %s", fullNameRecord, msgCount));
-//
-//            producer.send(new ProducerRecord(GMKConstants.topic, simpleMessageRecord)).get();
-//            logger.log(Level.INFO, String.format("Published message %s with id: %s", simpleMessageRecord, msgCount));
-//
-//            msgCount++;
-//            Thread.sleep(1 * 1000 * 10);
-//        }
+        int msgCount = 0;
+        while (true) {
+            GenericRecord fullNameRecord = produceFullName(fullNameAvroSchema, msgCount);
+            GenericRecord simpleMessageRecord = produceSimpleMessage(simpleMessageAvroSchema, msgCount);
+
+            producer.send(new ProducerRecord(GMKConstants.topic, fullNameRecord)).get();
+            logger.log(Level.INFO, String.format("Published message %s with id: %s", fullNameRecord, msgCount));
+
+            producer.send(new ProducerRecord(GMKConstants.topic, simpleMessageRecord)).get();
+            logger.log(Level.INFO, String.format("Published message %s with id: %s", simpleMessageRecord, msgCount));
+
+            msgCount++;
+            Thread.sleep(1 * 1000 * 10);
+        }
         // ****************************************************************************************************** //
 
         // Publish Json messages.
-        KafkaProducer producer = Producer.of();
-        int i = 0;
-        while (true) {
-            String message1 = "{\"id\": " + i + ", \"name\": \"Dataflow\"}";
-            String message2 = "{\"id\": " + i + ", \"name\": \"Pub/Sub\"}";
+//        KafkaProducer producer = Producer.of();
+//        int i = 0;
+//        while (true) {
+//            String message1 = "{\"id\": " + i + ", \"name\": \"Dataflow\"}";
+//            String message2 = "{\"id\": " + i + ", \"name\": \"Pub/Sub\"}";
+//
+//            producer.send(new ProducerRecord(GMKConstants.topic, message1));
+//            logger.log(Level.INFO, message1);
+//            producer.send(new ProducerRecord(GMKConstants.topic, message2));
+//            logger.log(Level.INFO, message2);
+//
+//            i++;
+//            Thread.sleep(1000 * 10);
 
-            producer.send(new ProducerRecord(GMKConstants.topic, message1));
-            logger.log(Level.INFO, message1);
-            producer.send(new ProducerRecord(GMKConstants.topic, message2));
-            logger.log(Level.INFO, message2);
-
-            i++;
-            Thread.sleep(1000 * 10);
-
-            // ****************************************************************************************************** //
-
-
-
-
-        }
+            // ****************************************************************************************************** /
     }
 }
 
