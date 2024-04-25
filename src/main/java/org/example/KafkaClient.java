@@ -36,29 +36,29 @@ import java.util.logging.Logger;
 
 public class KafkaClient {
     private static final Duration sleep = Duration.ofMinutes(1);
-//    private static final String fullNameAvroSchemaPath = "/Users/anandinguva/Desktop/projects/KafkaProject/src/main/avro/fullName.avsc";
-//    private static final String simpleMessageAvroSchemaPath = "/Users/anandinguva/Desktop/projects/KafkaProject/src/main/avro/simpleMessage.avsc";
+    private static final String fullNameAvroSchemaPath = "/Users/anandinguva/Desktop/projects/KafkaProject/src/main/avro/fullName.avsc";
+    private static final String simpleMessageAvroSchemaPath = "/Users/anandinguva/Desktop/projects/KafkaProject/src/main/avro/simpleMessage.avsc";
 
     // Comment these while running on local.
-    private static final String fullNameAvroSchemaPath = "/app/fullName.avsc";
-    private static final String simpleMessageAvroSchemaPath = "/app/simpleMessage.avsc";
+//    private static final String fullNameAvroSchemaPath = "/app/fullName.avsc";
+//    private static final String simpleMessageAvroSchemaPath = "/app/simpleMessage.avsc";
     // Decouple Producer from this class to a different class for better readability.
     public static class Producer {
 
-        public static KafkaProducer of() {
-            StringSerializer keySerializer = new StringSerializer();
-            StringSerializer valueSerializer = new StringSerializer();
-            Map<String, Object> configs = new HashMap<String, Object>();
-            configs.put(
-                    "bootstrap.servers", GMKConstants.bootStrapServers);
-
-            configs.putAll(ClientProperties.get());
-
-            return new KafkaProducer<>(
-                    configs,
-                    keySerializer,
-                    valueSerializer);
-        }
+//        public static KafkaProducer of() {
+//            StringSerializer keySerializer = new StringSerializer();
+//            StringSerializer valueSerializer = new StringSerializer();
+//            Map<String, Object> configs = new HashMap<String, Object>();
+//            configs.put(
+//                    "bootstrap.servers", GMKConstants.bootStrapServers);
+//
+//            configs.putAll(ClientProperties.get());
+//
+//            return new KafkaProducer<>(
+//                    configs,
+//                    keySerializer,
+//                    valueSerializer);
+//        }
 
         public static KafkaProducer of(Schema avroSchema) throws RestClientException, IOException {
 //            map.putAll(ClientProperties.get());
@@ -86,22 +86,18 @@ public class KafkaClient {
                     valueSerializer);
         }
 
-        public static KafkaProducer of(List<Schema> avroSchemas) throws RestClientException, IOException {
+        public static KafkaProducer of() throws RestClientException, IOException {
 
             StringSerializer keySerializer = new StringSerializer();
 
-            // Value serializer using a MockSchemaRegistryClient
-            MockSchemaRegistryClient mockSchemaRegistryClient = new MockSchemaRegistryClient();
-            int id = 1;
-            for (Schema schema : avroSchemas) {
-                mockSchemaRegistryClient.register(GMKConstants.topic + "-value", schema, 1, id);
-                id++;
-            }
-
-            KafkaAvroSerializer valueSerializer = new KafkaAvroSerializer(mockSchemaRegistryClient);
+            KafkaAvroSerializer valueSerializer = new KafkaAvroSerializer();
             Map<String, Object> configs = new HashMap<String, Object>();
             configs.put(
                     "bootstrap.servers", GMKConstants.bootStrapServers);
+            // Auto register the schema.
+            configs.put(
+                    "auto.register.schema", true
+            );
 
             configs.putAll(ClientProperties.get());
             return new KafkaProducer<>(
@@ -153,13 +149,13 @@ public class KafkaClient {
         Schema fullNameAvroSchema = new Schema.Parser().parse(new File(fullNameAvroSchemaPath));
         Schema simpleMessageAvroSchema = new Schema.Parser().parse(new File(simpleMessageAvroSchemaPath));
 
-        List<Schema> schemaList = new ArrayList<>();
-        schemaList.add(fullNameAvroSchema);
-        schemaList.add(simpleMessageAvroSchema);
+//        List<Schema> schemaList = new ArrayList<>();
+//        schemaList.add(fullNameAvroSchema);
+//        schemaList.add(simpleMessageAvroSchema);
 
 //         Publish Avro messages.
-        KafkaProducer producer = Producer.of(schemaList);
-        KafkaConsumer consumer = Consumer.of();
+        KafkaProducer producer = Producer.of();
+
 
 
         int msgCount = 0;
