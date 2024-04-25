@@ -1,6 +1,7 @@
 #!/bin/sh
 
-source /Users/anandinguva/Desktop/projects/shflags/shflags
+# Change the path of the shflags to the clone repo from https://github.com/kward/shflags
+source /usr/local/google/home/anandinguva/KafkaBeamStarter/shflags/shflags
 
 # Override the following defaults if you're using internal-client.yaml.
 DEFINE_string client_config "client.yaml" "The YAML file containing the client config" c
@@ -9,8 +10,10 @@ DEFINE_string namespace "gmk-kafka-client" "The namespace that the client runs i
 # parse the command-line
 FLAGS "$@" || exit $?
 
+mvn clean package
+
 # Build image. TODO: Change the tag if you are using a different image.
-docker build -t us-docker.pkg.dev/dataflow-testing-311516/df-test-us/anandinguva_kafka_avro_producer:latest
+docker build -t us-docker.pkg.dev/dataflow-testing-311516/df-test-us/anandinguva_kafka_avro_producer:latest .
 
 docker push us-docker.pkg.dev/dataflow-testing-311516/df-test-us/anandinguva_kafka_avro_producer:latest
 
