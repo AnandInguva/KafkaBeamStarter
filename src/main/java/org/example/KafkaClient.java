@@ -1,44 +1,36 @@
 package org.example;
 
+import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
-import io.confluent.kafka.serializers.AvroSchemaUtils;
-import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
+import io.confluent.kafka.serializers.subject.RecordNameStrategy;
+
 import org.apache.avro.Schema;
-import org.apache.avro.file.DataFileReader;
-import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericRecordBuilder;
-import org.apache.avro.io.DatumReader;
-import org.apache.beam.sdk.extensions.gcp.util.GcsUtil;
-import org.apache.beam.sdk.options.Default;
-import org.apache.beam.sdk.schemas.SchemaUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.example.avro.FullName;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class KafkaClient {
     private static final Duration sleep = Duration.ofMinutes(1);
-    private static final String fullNameAvroSchemaPath = "/Users/anandinguva/Desktop/projects/KafkaProject/src/main/avro/fullName.avsc";
-    private static final String simpleMessageAvroSchemaPath = "/Users/anandinguva/Desktop/projects/KafkaProject/src/main/avro/simpleMessage.avsc";
-
+    private static final String fullNameAvroSchemaPath = "/app/fullName.avsc";
+    private static final String simpleMessageAvroSchemaPath = "/app/simpleMessage.avsc";
     // Comment these while running on local.
 //    private static final String fullNameAvroSchemaPath = "/app/fullName.avsc";
 //    private static final String simpleMessageAvroSchemaPath = "/app/simpleMessage.avsc";
@@ -88,22 +80,23 @@ public class KafkaClient {
 
         public static KafkaProducer of() throws RestClientException, IOException {
 
-            StringSerializer keySerializer = new StringSerializer();
-
-            KafkaAvroSerializer valueSerializer = new KafkaAvroSerializer();
+            // StringSerializer keySerializer = new StringSerializer();
+            String schemaRegistryURL = "http://10.128.0.50:8081";
             Map<String, Object> configs = new HashMap<String, Object>();
             configs.put(
                     "bootstrap.servers", GMKConstants.bootStrapServers);
             // Auto register the schema.
             configs.put(
-                    "auto.register.schema", true
+                    KafkaAvroSerializerConfig.AUTO_REGISTER_SCHEMAS, true
             );
+            configs.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryURL);
+            configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
+            configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+            configs.put("value.subject.name.strategy", RecordNameStrategy.class.getName());
 
             configs.putAll(ClientProperties.get());
             return new KafkaProducer<>(
-                    configs,
-                    keySerializer,
-                    valueSerializer);
+                    configs);
         }
     }
 
@@ -161,13 +154,13 @@ public class KafkaClient {
         int msgCount = 0;
         while (true) {
             GenericRecord fullNameRecord = produceFullName(fullNameAvroSchema, msgCount);
-            GenericRecord simpleMessageRecord = produceSimpleMessage(simpleMessageAvroSchema, msgCount);
+            // GenericRecord simpleMessageRecord = produceSimpleMessage(simpleMessageAvroSchema, msgCount);
 
             producer.send(new ProducerRecord(GMKConstants.topic, fullNameRecord)).get();
             logger.log(Level.INFO, String.format("Published message %s with id: %s", fullNameRecord, msgCount));
 
-            producer.send(new ProducerRecord(GMKConstants.topic, simpleMessageRecord)).get();
-            logger.log(Level.INFO, String.format("Published message %s with id: %s", simpleMessageRecord, msgCount));
+            // producer.send(new ProducerRecord(GMKConstants.topic, simpleMessageRecord)).get();
+            // logger.log(Level.INFO, String.format("Published message %s with id: %s", simpleMessageRecord, msgCount));
 
             msgCount++;
             Thread.sleep(1 * 1000 * 10);
@@ -189,7 +182,7 @@ public class KafkaClient {
 //            i++;
 //            Thread.sleep(1000 * 10);
 
-            // ****************************************************************************************************** /
+        // ****************************************************************************************************** /
     }
 }
 
