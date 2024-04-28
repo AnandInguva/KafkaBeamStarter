@@ -5,6 +5,7 @@
   "fields": [
     { "name": "first", "type": "string" },
     { "name": "last", "type": "string" },
-    { "name" :  "id", "type":  "int", ",default": 0}
+    { "name" :  "id", "type":  "int", "default": 0},
+    { "name" :  "state", "type":  "string", "default": "NC"}
   ]
 }

@@ -14,10 +14,10 @@ import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class FullName extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -890726554360259523L;
+  private static final long serialVersionUID = -6532468256054432492L;
 
 
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"FullName\",\"namespace\":\"org.example.avro\",\"fields\":[{\"name\":\"first\",\"type\":\"string\"},{\"name\":\"last\",\"type\":\"string\"},{\"name\":\"id\",\"type\":\"int\",\",default\":0}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"FullName\",\"namespace\":\"org.example.avro\",\"fields\":[{\"name\":\"first\",\"type\":\"string\"},{\"name\":\"last\",\"type\":\"string\"},{\"name\":\"id\",\"type\":\"int\",\"default\":0},{\"name\":\"state\",\"type\":\"string\",\"default\":\"NC\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static final SpecificData MODEL$ = new SpecificData();
@@ -76,6 +76,7 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
   private java.lang.CharSequence first;
   private java.lang.CharSequence last;
   private int id;
+  private java.lang.CharSequence state;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -89,11 +90,13 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
    * @param first The new value for first
    * @param last The new value for last
    * @param id The new value for id
+   * @param state The new value for state
    */
-  public FullName(java.lang.CharSequence first, java.lang.CharSequence last, java.lang.Integer id) {
+  public FullName(java.lang.CharSequence first, java.lang.CharSequence last, java.lang.Integer id, java.lang.CharSequence state) {
     this.first = first;
     this.last = last;
     this.id = id;
+    this.state = state;
   }
 
   @Override
@@ -109,6 +112,7 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
     case 0: return first;
     case 1: return last;
     case 2: return id;
+    case 3: return state;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -121,6 +125,7 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
     case 0: first = (java.lang.CharSequence)value$; break;
     case 1: last = (java.lang.CharSequence)value$; break;
     case 2: id = (java.lang.Integer)value$; break;
+    case 3: state = (java.lang.CharSequence)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -177,6 +182,23 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
   }
 
   /**
+   * Gets the value of the 'state' field.
+   * @return The value of the 'state' field.
+   */
+  public java.lang.CharSequence getState() {
+    return state;
+  }
+
+
+  /**
+   * Sets the value of the 'state' field.
+   * @param value the value to set.
+   */
+  public void setState(java.lang.CharSequence value) {
+    this.state = value;
+  }
+
+  /**
    * Creates a new FullName RecordBuilder.
    * @return A new FullName RecordBuilder
    */
@@ -220,6 +242,7 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
     private java.lang.CharSequence first;
     private java.lang.CharSequence last;
     private int id;
+    private java.lang.CharSequence state;
 
     /** Creates a new Builder */
     private Builder() {
@@ -244,6 +267,10 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
         this.id = data().deepCopy(fields()[2].schema(), other.id);
         fieldSetFlags()[2] = other.fieldSetFlags()[2];
       }
+      if (isValidValue(fields()[3], other.state)) {
+        this.state = data().deepCopy(fields()[3].schema(), other.state);
+        fieldSetFlags()[3] = other.fieldSetFlags()[3];
+      }
     }
 
     /**
@@ -263,6 +290,10 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
       if (isValidValue(fields()[2], other.id)) {
         this.id = data().deepCopy(fields()[2].schema(), other.id);
         fieldSetFlags()[2] = true;
+      }
+      if (isValidValue(fields()[3], other.state)) {
+        this.state = data().deepCopy(fields()[3].schema(), other.state);
+        fieldSetFlags()[3] = true;
       }
     }
 
@@ -385,6 +416,46 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
       return this;
     }
 
+    /**
+      * Gets the value of the 'state' field.
+      * @return The value.
+      */
+    public java.lang.CharSequence getState() {
+      return state;
+    }
+
+
+    /**
+      * Sets the value of the 'state' field.
+      * @param value The value of 'state'.
+      * @return This builder.
+      */
+    public org.example.avro.FullName.Builder setState(java.lang.CharSequence value) {
+      validate(fields()[3], value);
+      this.state = value;
+      fieldSetFlags()[3] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'state' field has been set.
+      * @return True if the 'state' field has been set, false otherwise.
+      */
+    public boolean hasState() {
+      return fieldSetFlags()[3];
+    }
+
+
+    /**
+      * Clears the value of the 'state' field.
+      * @return This builder.
+      */
+    public org.example.avro.FullName.Builder clearState() {
+      state = null;
+      fieldSetFlags()[3] = false;
+      return this;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public FullName build() {
@@ -393,6 +464,7 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
         record.first = fieldSetFlags()[0] ? this.first : (java.lang.CharSequence) defaultValue(fields()[0]);
         record.last = fieldSetFlags()[1] ? this.last : (java.lang.CharSequence) defaultValue(fields()[1]);
         record.id = fieldSetFlags()[2] ? this.id : (java.lang.Integer) defaultValue(fields()[2]);
+        record.state = fieldSetFlags()[3] ? this.state : (java.lang.CharSequence) defaultValue(fields()[3]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -431,6 +503,8 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
 
     out.writeInt(this.id);
 
+    out.writeString(this.state);
+
   }
 
   @Override public void customDecode(org.apache.avro.io.ResolvingDecoder in)
@@ -444,8 +518,10 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
 
       this.id = in.readInt();
 
+      this.state = in.readString(this.state instanceof Utf8 ? (Utf8)this.state : null);
+
     } else {
-      for (int i = 0; i < 3; i++) {
+      for (int i = 0; i < 4; i++) {
         switch (fieldOrder[i].pos()) {
         case 0:
           this.first = in.readString(this.first instanceof Utf8 ? (Utf8)this.first : null);
@@ -457,6 +533,10 @@ public class FullName extends org.apache.avro.specific.SpecificRecordBase implem
 
         case 2:
           this.id = in.readInt();
+          break;
+
+        case 3:
+          this.state = in.readString(this.state instanceof Utf8 ? (Utf8)this.state : null);
           break;
 
         default:

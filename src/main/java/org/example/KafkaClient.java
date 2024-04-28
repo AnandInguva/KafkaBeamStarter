@@ -18,6 +18,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.example.avro.FullName;
 
 import java.io.File;
 import java.io.IOException;
@@ -154,13 +155,13 @@ public class KafkaClient {
         int msgCount = 0;
         while (true) {
             GenericRecord fullNameRecord = produceFullName(fullNameAvroSchema, msgCount);
-            // GenericRecord simpleMessageRecord = produceSimpleMessage(simpleMessageAvroSchema, msgCount);
+            GenericRecord simpleMessageRecord = produceSimpleMessage(simpleMessageAvroSchema, msgCount);
 
             producer.send(new ProducerRecord(GMKConstants.topic, fullNameRecord)).get();
             logger.log(Level.INFO, String.format("Published message %s with id: %s", fullNameRecord, msgCount));
 
-            // producer.send(new ProducerRecord(GMKConstants.topic, simpleMessageRecord)).get();
-            // logger.log(Level.INFO, String.format("Published message %s with id: %s", simpleMessageRecord, msgCount));
+            producer.send(new ProducerRecord(GMKConstants.topic, simpleMessageRecord)).get();
+            logger.log(Level.INFO, String.format("Published message %s with id: %s", simpleMessageRecord, msgCount));
 
             msgCount++;
             Thread.sleep(1 * 1000 * 10);
