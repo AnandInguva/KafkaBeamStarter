@@ -9,7 +9,10 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: anandinguva-kafka-producer
+# Change name in the deploy.sh as well
+  # name: anandinguva-kafka-producer
+  name: ak4b-test-single-schema-topic-client
+  # name: ak4b-test-multiple-schema-topic-client
   namespace: gmk-kafka-client
   labels:
     app: kafka-client

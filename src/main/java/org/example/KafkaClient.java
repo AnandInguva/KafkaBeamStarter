@@ -81,36 +81,25 @@ public class KafkaClient {
 
         public static KafkaProducer of() throws RestClientException, IOException {
 
-            // StringSerializer keySerializer = new StringSerializer();
-            String schemaRegistryURL = "http://10.128.0.50:8081";
-            Map<String, Object> configs = new HashMap<String, Object>();
+        //     String schemaRegistryURL = "http://10.128.0.50:8081";
+        Map<String, Object> configs = new HashMap<String, Object>();
             configs.put(
                     "bootstrap.servers", GMKConstants.bootStrapServers);
             // Auto register the schema.
             configs.put(
                     KafkaAvroSerializerConfig.AUTO_REGISTER_SCHEMAS, true
             );
+            String schemaRegistryURL = "http://10.196.0.42:8081";    
             configs.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryURL);
             configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
             configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-            configs.put("value.subject.name.strategy", RecordNameStrategy.class.getName());
+
+            // Record name strategy for multiple schema topic
+        //     configs.put("value.subject.name.strategy", RecordNameStrategy.class.getName());
 
             configs.putAll(ClientProperties.get());
             return new KafkaProducer<>(
                     configs);
-        }
-    }
-
-    public static class Consumer {
-        public static KafkaConsumer of() {
-            Map<String, Object> properties = new HashMap<>();
-            properties.putAll(ClientProperties.get());
-            properties.put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-group-id");
-            properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
-            properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-            properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-            KafkaConsumer consumer = new KafkaConsumer(properties);
-            return consumer;
         }
     }
 
@@ -143,9 +132,6 @@ public class KafkaClient {
         Schema fullNameAvroSchema = new Schema.Parser().parse(new File(fullNameAvroSchemaPath));
         Schema simpleMessageAvroSchema = new Schema.Parser().parse(new File(simpleMessageAvroSchemaPath));
 
-//        List<Schema> schemaList = new ArrayList<>();
-//        schemaList.add(fullNameAvroSchema);
-//        schemaList.add(simpleMessageAvroSchema);
 
 //         Publish Avro messages.
         KafkaProducer producer = Producer.of();
@@ -160,8 +146,8 @@ public class KafkaClient {
             producer.send(new ProducerRecord(GMKConstants.topic, fullNameRecord)).get();
             logger.log(Level.INFO, String.format("Published message %s with id: %s", fullNameRecord, msgCount));
 
-            producer.send(new ProducerRecord(GMKConstants.topic, simpleMessageRecord)).get();
-            logger.log(Level.INFO, String.format("Published message %s with id: %s", simpleMessageRecord, msgCount));
+        //     producer.send(new ProducerRecord(GMKConstants.topic, simpleMessageRecord)).get();
+        //     logger.log(Level.INFO, String.format("Published message %s with id: %s", simpleMessageRecord, msgCount));
 
             msgCount++;
             Thread.sleep(1 * 1000 * 10);

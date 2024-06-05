@@ -29,5 +29,5 @@ kubectl get secret gmk-sasl-plain-login -n "${FLAGS_namespace}"
 kubectl apply -f "${FLAGS_client_config}"
 
 # Change the name of the client in the client.yaml as well if you are changing the name here.
-kubectl rollout restart deployment anandinguva-kafka-producer -n "${FLAGS_namespace}"
-
+# kubectl rollout restart deployment anandinguva-kafka-producer -n "${FLAGS_namespace}"
+kubectl rollout restart deployment ak4b-test-single-schema-topic-client -n "${FLAGS_namespace}"
